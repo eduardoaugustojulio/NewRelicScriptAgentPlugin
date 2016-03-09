@@ -1,0 +1,12 @@
+{
+	"agents": [
+		{
+			"agentName" : "ScriptAgent",
+			"reportMetricsToServers" : "true",
+			"scriptsToExecute" : [
+				"/Users/Ricardo/Documents/EclipseWorkspace/ScriptAgentNewRelicPlugin/script_examples/OSbasicMetrics.sh",
+				"/Users/Ricardo/Documents/EclipseWorkspace/ScriptAgentNewRelicPlugin/script_examples/CloudStorageLocalUsage.sh",
+			]
+		},
+	]
+}
