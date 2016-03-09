@@ -116,8 +116,8 @@ Below is a summary of the health metrics currently being reported to the New Rel
 | ------------------------------------------------ | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `ScriptAgentHealth/SuccessfulExecutions`         | `[Integer]` | Number of successfully executed scripts for each polling thread execution.                                                                                          |
 | `ScriptAgentHealth/UnsuccessfulExecutions`       | `[Integer]` | Number of unsuccessfully executed scripts for each polling thead execution.                                                                                         |
-| `ScriptAgentHealth/TotalResponseTime`            | `[ms]`      | The sum of all response time executions of each individual script per polling thread execution. This will count both successful and unsuccessful script executions. |
-| `ScriptAgentHealth/AveragePerScriptResponseTime` | `[ms]`      | The average response time of all script executions per polling thread execution. This will count both successful and unsuccessful script executions.                |
+| `ScriptAgentHealth/TotalResponseTime`            | `[milliseconds]` | The sum of all response time executions of each individual script per polling thread execution. This will count both successful and unsuccessful script executions. |
+| `ScriptAgentHealth/AveragePerScriptResponseTime` | `[milliseconds]` | The average response time of all script executions per polling thread execution. This will count both successful and unsuccessful script executions.                |
 
 ## Installation ##
 Download the Java project from GitHub, add it to Eclipse (New Project -> Java Project -> select the root directory of
