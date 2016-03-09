@@ -84,8 +84,8 @@ public class ScriptAgent extends Agent
 		logger.debug("Successful executions: " + successfulExecutions + ", Unsuccessful executions: " + unsuccessfulExecutions + ", AVG resp time per script execution: " + AVGResponseTime + "ms");
 		reportMetric(HEALTH_METRIC_PREFIX + "/SuccessfulExecutions", "Integer", successfulExecutions);
 		reportMetric(HEALTH_METRIC_PREFIX + "/UnsuccessfulExecutions", "Integer", unsuccessfulExecutions);
-		reportMetric(HEALTH_METRIC_PREFIX + "/TotalResponseTime", "ms", totalResponseTime);
-		reportMetric(HEALTH_METRIC_PREFIX + "/AveragePerScriptResponseTime", "ms", AVGResponseTime);
+		reportMetric(HEALTH_METRIC_PREFIX + "/TotalResponseTime", "milliseconds", totalResponseTime);
+		reportMetric(HEALTH_METRIC_PREFIX + "/AveragePerScriptResponseTime", "milliseconds", AVGResponseTime);
 	}
 
 	/* (non-Javadoc)
