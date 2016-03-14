@@ -124,6 +124,8 @@ Download the Java project from GitHub, add it to Eclipse (New Project -> Java Pr
 the downloaded GitHub project), create a Run Configuration where you set `com.ricardosantos.scriptagent.Main` as the
 main class.
 
+Use New Relic's Platform Installer (NPI).
+
 ## Configuration ##
 Configuration is done via two files: newrelic.json & plugin.json.
 
