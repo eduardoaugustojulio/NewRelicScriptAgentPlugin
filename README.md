@@ -120,11 +120,13 @@ Below is a summary of the health metrics currently being reported to the New Rel
 | `ScriptAgentHealth/AveragePerScriptResponseTime` | `[milliseconds]` | The average response time of all script executions per polling thread execution. This will count both successful and unsuccessful script executions.                |
 
 ## Installation ##
+### To simply run ###
+Use New Relic's Platform Installer (NPI).
+
+### For development, to extend the plugin ###
 Download the Java project from GitHub, add it to Eclipse (New Project -> Java Project -> select the root directory of
 the downloaded GitHub project), create a Run Configuration where you set `com.ricardosantos.scriptagent.Main` as the
 main class.
-
-Use New Relic's Platform Installer (NPI).
 
 ## Configuration ##
 Configuration is done via two files: newrelic.json & plugin.json.
