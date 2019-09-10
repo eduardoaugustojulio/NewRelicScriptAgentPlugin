@@ -9,12 +9,14 @@ public class ScriptAgent extends Agent
 {
 	public final String agentName;
 	public final boolean reportMetricsToServers;
+
+	private Script[] scripts;
+
 	public static final String GUID 	= "com.scriptagent";
 	public static final String version 	= "0.0.1";
-	
+
 	private static final Logger logger = Logger.getLogger(ScriptAgent.class);
 	
-	private Script[] scripts;
 	public ScriptAgent(String name, String[] paths, boolean reportMetricsToServers)
 	{
 		super(GUID, version);
@@ -36,7 +38,7 @@ public class ScriptAgent extends Agent
 		for(Script script : scripts)
 		{
 			script.run();
-		}
+        }
 	}
 
 	@Override

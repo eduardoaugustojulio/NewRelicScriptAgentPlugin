@@ -1,11 +1,11 @@
 matrix:
-  include:
+    include:
     - language: java
-      script:
+        script:
         - ant main
 
-	- language: shell
-      before_script:
+    - language: shell
+        before_script:
         - cd scripts/
 	  script:
   		- bash -c 'shopt -s globstar nullglob; shellcheck ./*.{sh,ksh,bash}' 

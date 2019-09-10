@@ -15,16 +15,19 @@ public class Script
 
 	public Script(String src)
 	{
-		path = src;
+    	path = src;
 	}
-
-	public void run()
+    
+	public String[] run()
 	{
+        String command = path;
+        
+        Process proc; 
         BufferedReader stdInput, stdError;
-            
+        
         try
         {
-            Process proc = Runtime.getRuntime().exec(path);
+            proc = Runtime.getRuntime().exec(command);
             proc.waitFor();
 
             stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
@@ -38,11 +41,33 @@ public class Script
         {
             logger.error("ERROR: " +IrqExecp.getMessage());
         }
+        
+        if(proc.exitValue() == 0)
+        {
+            parseMetric(stdInput);
+        }
     }
-
+   
+    private String parseMetric(BufferedReader buffer)
+    {
+        List<String> metrics = new ArrayList<String>();
+        
+        String line;
+        while((line = stdInput.readLine) != null)
+        {
+            if(!line.startsWith("#") && line.startsWith("Metric:"))
+            {
+                line = line.substring(line.indexOf(':') + 1, line.length()).trim();
+                for(String value : line.split("/"))
+                {
+                
+                }
+            }
+        }    
+    }
+         
     public String getPath()
 	{
-		return this.path;
+		return path;
 	}
-
 }
