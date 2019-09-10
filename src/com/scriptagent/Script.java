@@ -15,34 +15,58 @@ public class Script
 
 	public Script(String src)
 	{
-		path = src;
+    	path = src;
 	}
-
-	public void run()
+    
+	public int run(StringBuilder stdOut)
 	{
+        int exitValue = -1;
+        
+        Process proc; 
         BufferedReader stdInput, stdError;
-            
+        String cmd = path;
+           
         try
         {
-            Process proc = Runtime.getRuntime().exec(path);
+            proc = Runtime.getRuntime().exec(cmd);
             proc.waitFor();
+
+            exitValue = proc.exitValue();
 
             stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
             stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
-        }
-		catch(IOException IOExcep)
-        {
-    		logger.error("ERROR: " + IOExcep.getMessage());
-        }
-        catch(InterruptedException IrqExecp)
-        {
-            logger.error("ERROR: " +IrqExecp.getMessage());
-        }
-    }
 
+               
+            String line = null;
+            if(exitValue == 0)
+            {
+                while((line = stdInput.readLine()) != null) 
+                {
+                    stdOut.append(line + "\n");
+                }
+            }
+            else
+            {
+                while((line = stdError.readLine()) != null)
+                {
+                    stdOut.append(line + "\n");
+                }
+            }
+        }
+		catch(IOException IOExcept)
+        {
+    		logger.error("ERROR: " + IOExcept.getMessage());
+        }
+        catch(InterruptedException IrqExcept)
+        {
+            logger.error("ERROR: " +IrqExcept.getMessage());
+        }
+    
+        return exitValue;
+    }
+    
     public String getPath()
 	{
-		return this.path;
+		return path;
 	}
-
 }

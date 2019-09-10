@@ -20,8 +20,11 @@ public class ScriptAgentFactory extends AgentFactory
     public Agent createConfiguredAgent(Map<String, Object> properties) throws ConfigurationException {
 		
 		String agentName = (String) properties.get("agentName");
+
 		String reportMetricsToServers = (String) properties.get("reportMetricsToServers");
-		
+
+	    JSONArray scripts = (JSONArray)properties.get("scripts");
+	
         if (agentName == null)
 		{
             throw new ConfigurationException("'agentName' in plugin.json file cannot be null.");
@@ -37,18 +40,17 @@ public class ScriptAgentFactory extends AgentFactory
 			throw new ConfigurationException("'reportMetricsToServers' must have the value 'true' or 'false', not " + reportMetricsToServers);
 		}
 		
-        JSONArray scripts = (JSONArray)properties.get("scripts");
+        if (scripts == null || scripts.size() == 0) 
+        {
+            throw new ConfigurationException("The list of 'scripts' in plugin.json it's empty!");
+        }
+   
 
         return new ScriptAgent(agentName, scriptsToExecute(scripts), Boolean.valueOf(reportMetricsToServers));
     }
 	
 	private String[] scriptsToExecute(JSONArray scripts) throws ConfigurationException
 	{
-        if (scripts == null || scripts.size() == 0) 
-        {
-            throw new ConfigurationException("The list of 'scripts' in plugin.json it's empty!");
-        }
-   
         String[] pathArray = new String[scripts.size()];
         for (int n = 0 ; n < scripts.size() ; n++)
         {
@@ -57,7 +59,7 @@ public class ScriptAgentFactory extends AgentFactory
         	
             if (!f.exists() || f.isDirectory())
         	{
-        		logger.error("Script: '" + path + "' can not be executed!");
+        		logger.error(path + "' invalid format, cannot be executed!");
         	}
             pathArray[n] = path;
         }

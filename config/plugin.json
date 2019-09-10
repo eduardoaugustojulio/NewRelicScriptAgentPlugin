@@ -4,8 +4,8 @@
 			"agentName" : "NewRelicScriptAgent",
 			"reportMetricsToServers" : "true",
 			"scripts" : [
-				"/script/OSbasicMetrics.sh",
-				"/script/CloudStorageLocalUsage.sh"
+				"./scripts/OSbasicMetrics.sh",
+				"./scripts/CloudStorageLocalUsage.sh"
 			]
 		}
 	]

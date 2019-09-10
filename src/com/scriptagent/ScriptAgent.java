@@ -1,6 +1,8 @@
 package com.scriptagent;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.newrelic.metrics.publish.Agent;
 import com.newrelic.metrics.publish.util.Logger;
@@ -9,12 +11,15 @@ public class ScriptAgent extends Agent
 {
 	public final String agentName;
 	public final boolean reportMetricsToServers;
+
+	private Script[] scripts;
+
+
 	public static final String GUID 	= "com.scriptagent";
 	public static final String version 	= "0.0.1";
 	
-	private static final Logger logger = Logger.getLogger(ScriptAgent.class);
+    private static final Logger logger = Logger.getLogger(ScriptAgent.class);
 	
-	private Script[] scripts;
 	public ScriptAgent(String name, String[] paths, boolean reportMetricsToServers)
 	{
 		super(GUID, version);
@@ -26,17 +31,6 @@ public class ScriptAgent extends Agent
         {
             scripts[n] = new Script(paths[n]);
         }
-	}
-
-	@Override
-	public void pollCycle()
-	{
-        int success, unsuccess;
-
-		for(Script script : scripts)
-		{
-			script.run();
-		}
 	}
 
 	@Override
@@ -59,4 +53,88 @@ public class ScriptAgent extends Agent
 		if (reportMetricsToServers)
 			super.reportMetric(metricName, units, count, value, minValue, maxValue, sumOfSquares);
 	}
+	@Override
+	public void pollCycle()
+	{
+        long totalResponseTime = 0;
+        long averageResponseTime = 0;        
+
+        int successfulExecutions = 0;
+        int unsuccessfulExecutions = 0;
+
+		for(Script script : scripts)
+		{   
+            StringBuilder stdOut = new StringBuilder();
+
+            long begin = System.currentTimeMillis();
+            int exitValue = script.run(stdOut);
+            totalResponseTime += (System.currentTimeMillis() - begin);
+           
+            if(exitValue != 0)
+            {
+                logger.error(stdOut.toString());
+                unsuccessfulExecutions++;
+            }
+            else
+            {
+                try
+                {
+                    String [] metrics = parseMetrics(stdOut);
+
+                    String component = metrics[0];
+                    String label = metrics[1];
+                               
+                    String value = metrics[2].substring(0, metrics[2].indexOf('['));
+                    String units = metrics[2].substring(metrics[2].indexOf('[') + 1, metrics[2].length() - 1);
+                
+                    logger.info("Reporting: " + component + " " + label + " " + value + " " + units);
+                    reportMetric(component + "/" + label, units,  Double.parseDouble(value));
+
+                    successfulExecutions++;    
+                }
+                catch(ScriptAgentException scriptExcept)
+                {
+                    logger.error("ERROR: " + scriptExcept.getMessage());
+                }
+           }
+       }
+       averageResponseTime = (totalResponseTime / (successfulExecutions + unsuccessfulExecutions));
+       reportMetric("ScriptAgentHealth" + "/SuccessfulExecutions", "Integer", successfulExecutions);
+       reportMetric("ScriptAgentHealth" + "/UnsuccessfulExecutions", "Integer", unsuccessfulExecutions);
+       reportMetric("ScriptAgentHealth" + "/TotalResponseTime", "milliseconds", totalResponseTime);
+       reportMetric("ScriptAgentHealth" + "/AveragePerScriptResponseTime", "milliseconds", averageResponseTime);
+	}
+
+    public String [] parseMetrics(StringBuilder stdOut) throws ScriptAgentException
+    {
+        String [] metrics = new String[3];
+    
+        if(!stdOut.toString().isEmpty())
+        {
+            for(String s : stdOut.toString().split("\n"))
+            {
+                if(s.startsWith("Metrics:"))
+                {
+                    s = s.substring(s.indexOf(":") + 1, s.length());
+                    if(s.split("/").length == 3)
+                    {
+                        metrics = s.split("/");
+                        for(String value : metrics)
+                        {
+                           if(value == null || value.isEmpty())
+                           {
+                                throw new ScriptAgentException("One of the components returned null or empty string");
+                           }    
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            throw new ScriptAgentException("Could not parse, received empty string.");
+        }
+
+        return metrics;
+    }    
 }
