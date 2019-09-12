@@ -134,7 +134,7 @@ public class ScriptAgent extends Agent
         {
             throw new ScriptAgentException("Could not parse, received empty string.");
         }
-
+        
         return metrics;
     }    
 }
