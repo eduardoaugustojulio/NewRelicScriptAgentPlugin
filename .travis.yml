@@ -1,11 +1,16 @@
 matrix:
-    include:
+  include:
     - language: java
-        script:
-        - ant main
+      script:
+        - ant compile
 
     - language: shell
-        before_script:
-        - cd scripts/
-	  script:
-  		- bash -c 'shopt -s globstar nullglob; shellcheck ./*.{sh,ksh,bash}' 
+      before_install:
+        - cd scripts/ 
+      script:
+        - bash -c 'shopt -s globstar nullglob; shellcheck ./*.{sh,ksh,bash}' 
+
+notifications:
+  email: false
+
+
