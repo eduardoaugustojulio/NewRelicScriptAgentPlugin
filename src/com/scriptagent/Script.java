@@ -63,27 +63,4 @@ public class Script
         }
         return exitValue;
     }
-   
-    private String parseMetric(BufferedReader buffer)
-    {
-        List<String> metrics = new ArrayList<String>();
-        
-        String line;
-        while((line = stdInput.readLine) != null)
-        {
-            if(!line.startsWith("#") && line.startsWith("Metric:"))
-            {
-                line = line.substring(line.indexOf(':') + 1, line.length()).trim();
-                for(String value : line.split("/"))
-                {
-                
-                }
-            }
-        }    
-    }
-    
-    public String getPath()
-	{
-		return path;
-	}
 }

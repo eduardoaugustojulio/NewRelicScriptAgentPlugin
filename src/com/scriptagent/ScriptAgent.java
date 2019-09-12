@@ -79,18 +79,21 @@ public class ScriptAgent extends Agent
             {
                 try
                 {
-                    String [] metrics = parseMetrics(stdOut);
+                    for(String line : stdOut.toString().split("\n"))
+                    {
+                        String [] metrics = parseMetrics(line);
 
-                    String component = metrics[0];
-                    String label = metrics[1];
+                        String component = metrics[0];
+                        String label = metrics[1];
                                
-                    String value = metrics[2].substring(0, metrics[2].indexOf('['));
-                    String units = metrics[2].substring(metrics[2].indexOf('[') + 1, metrics[2].length() - 1);
+                        String value = metrics[2].substring(0, metrics[2].indexOf('['));
+                        String units = metrics[2].substring(metrics[2].indexOf('[') + 1, metrics[2].length() - 1);
                 
-                    logger.info("Reporting: " + component + " " + label + " " + value + " " + units);
-                    reportMetric(component + "/" + label, units,  Double.parseDouble(value));
+                        logger.info("Reporting: " + component + " " + label + " " + value + " " + units);
+                        reportMetric(component + "/" + label, units,  Double.parseDouble(value));
 
-                    successfulExecutions++;    
+                        successfulExecutions++;    
+                    }
                 }
                 catch(ScriptAgentException scriptExcept)
                 {
@@ -105,36 +108,26 @@ public class ScriptAgent extends Agent
        reportMetric("ScriptAgentHealth" + "/AveragePerScriptResponseTime", "milliseconds", averageResponseTime);
 	}
 
-    public String [] parseMetrics(StringBuilder stdOut) throws ScriptAgentException
+    public String [] parseMetrics(String s) throws ScriptAgentException
     {
         String [] metrics = new String[3];
     
-        if(!stdOut.toString().isEmpty())
+        if(!s.isEmpty() && s.startsWith("Metrics:"))
         {
-            for(String s : stdOut.toString().split("\n"))
+            s = s.substring(s.indexOf(":") + 1, s.length());
+            if(s.split("/").length == 3)
             {
-                if(s.startsWith("Metrics:"))
+                metrics = s.split("/");
+                for(String value : metrics)
                 {
-                    s = s.substring(s.indexOf(":") + 1, s.length());
-                    if(s.split("/").length == 3)
-                    {
-                        metrics = s.split("/");
-                        for(String value : metrics)
-                        {
-                           if(value == null || value.isEmpty())
-                           {
-                                throw new ScriptAgentException("One of the components returned null or empty string");
-                           }    
-                        }
-                    }
-                }
+                   if(value == null || value.isEmpty())
+                   {
+                        throw new ScriptAgentException("One of the components returned null or empty string");
+                   }    
+                }    
             }
         }
-        else
-        {
-            throw new ScriptAgentException("Could not parse, received empty string.");
-        }
-        
+       
         return metrics;
     }    
 }
