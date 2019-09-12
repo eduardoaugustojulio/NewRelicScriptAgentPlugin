@@ -1,10 +1,8 @@
-# Script Plugin v0.0.1 #
+# New Relic Script Agent Plugin v0.0.2 #
 
 ## Description ##
 This plugin is designed to execute custom scripts and read their output from stdout, parse the output into metrics
 and upload these metrics into your New Relic cloud account.
-
-**NOTE** This has only been tested on a Mac OS X so far.
 
 ## Plugin requirements ##
 - Must have a valid New Relic account.
@@ -12,16 +10,10 @@ and upload these metrics into your New Relic cloud account.
 - JRE installed, preferably the latest version.
 
 ## How scripts are executed ##
-The Script Plugin poling thread will execute once every 60 seconds, and within these 60 seconds it will execute
+The Script Plugin polling thread will execute once every 60 seconds, and within these 60 seconds it will execute
 sequentially all the scripts it finds in plugin.json.
 
 **NOTE** This plugin has not been tested with scripts taking a total of over 60 seconds to execute.
-
-The plugin executes each script with the following code:
-```java
-Process p = Runtime.getRuntime().exec("echo Metric:OSbasicMetrics/CPUSystem/57[percentage]");
-p.waitFor();
-```
 
 Each time a script is executed, the plugin executing thread will wait until that script completes. After a script
 completes the plugin poling thread will proceed to execute the next script or it will terminate if there are no more
@@ -38,10 +30,8 @@ logger.error, which will come out as ERROR messages in the plugin's stdout and i
 As mentioned above, the poling thread which will execute your scripts will listen to stdout for metrics and stderr 
 and errors. Your scripts should be written to execute and terminate in that one execution.
 
-No specific format is required for stderr, all the text you report to stderr will be passed as is to the plugin's
-stdout and plugin/logs/newrelic_plugin.log as a ERROR message.
-
-For stdout, the plugin is expecting metrics to have the following prefix:
+No specific format is required for stderr, all the text you report to stderr will be passed as is to the plugin's stdout 
+and plugin/logs/newrelic_plugin.log as a ERROR message. For stdout, the plugin is expecting metrics to have the following prefix:
 
 ```
 Metric:
@@ -125,8 +115,7 @@ Use New Relic's Platform Installer (NPI).
 
 ### For development, to extend the plugin ###
 Download the Java project from GitHub, add it to Eclipse (New Project -> Java Project -> select the root directory of
-the downloaded GitHub project), create a Run Configuration where you set `com.ricardosantos.scriptagent.Main` as the
-main class.
+the downloaded GitHub project), create a Run Configuration where you set `com.scriptagent.Main` as the main class.
 
 ## Configuration ##
 Configuration is done via two files: newrelic.json & plugin.json.
