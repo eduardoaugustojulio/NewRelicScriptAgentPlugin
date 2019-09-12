@@ -1,4 +1,4 @@
-# New Relic Script Agent Plugin v0.0.2 #
+# New Relic Script Agent Plugin #
 
 ## Description ##
 This plugin is designed to execute custom scripts and read their output from stdout, parse the output into metrics
