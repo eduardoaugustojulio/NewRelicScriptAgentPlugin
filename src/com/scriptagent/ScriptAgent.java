@@ -47,12 +47,12 @@ public class ScriptAgent extends Agent
 	}
 
 	@Override
-	public void reportMetric(String metricName, String units, int count, Number value, Number minValue, Number maxValue,
-			Number sumOfSquares)
+	public void reportMetric(String metricName, String units, int count, Number value, Number minValue, Number maxValue, Number sumOfSquares)
 	{
 		if (reportMetricsToServers)
 			super.reportMetric(metricName, units, count, value, minValue, maxValue, sumOfSquares);
 	}
+
 	@Override
 	public void pollCycle()
 	{
@@ -66,7 +66,9 @@ public class ScriptAgent extends Agent
 		{   
             StringBuilder stdOut = new StringBuilder();
 
-            long begin = System.currentTimeMillis();
+            long begin, end;
+            begin = System.currentTimeMillis();
+
             int exitValue = script.run(stdOut);
             totalResponseTime += (System.currentTimeMillis() - begin);
            

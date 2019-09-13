@@ -1,0 +1,35 @@
+#!/bin/bash
+
+readonly PROG_NAME=$(basename "$0")
+
+disk_consumption()
+{     
+    local label="$1"
+    local path="$2"
+
+    local value=""
+    value="$(du -shm "$path" | awk '{print $1}')"
+
+    local units="[Megabytes]"
+
+    echo "Metrics:$PROG_NAME/$label/$value$units"
+}
+
+dropbox_disk_consumption()
+{
+    disk_consumption "DropboxLocalUsage" "$HOME/Dropbox"
+}
+
+google_drive_disk_consumption()
+{
+    disk_consumption "GoogleDriveLocalUsage" "$HOME/Google-Drive"
+}
+
+main()
+{
+    dropbox_disk_consumption
+    google_drive_disk_consumption
+    exit 0
+}
+
+main

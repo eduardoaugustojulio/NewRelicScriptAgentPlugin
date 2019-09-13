@@ -1,0 +1,50 @@
+#!/bin/bash
+
+readonly PROG_NAME=$(basename "$0")
+
+os_cpu_consumption()
+{
+    local label_user="CPUUser"
+    local value_user=""
+    value_user="$(mpstat | tail -1 | awk '{print $3}')"   
+
+    local label_sys="CPUSystem"
+    local value_sys=""
+    value_sys="$(mpstat | tail -1 | awk '{print $5}')"
+
+    local label_idle="CPUIdle"
+    local value_idle=""
+    value_idle="$(mpstat | tail -1 | awk '{print $12}')"
+
+    local units="[percentage]"   
+ 
+    echo "Metrics:$PROG_NAME/$label_user/$value_user$units"
+    echo "Metrics:$PROG_NAME/$label_sys/$value_sys$units"
+    echo "Metrics:$PROG_NAME/$label_idle/$value_idle$units"
+}
+
+os_memory_consumption()
+{
+    local label_mem_used="MemoryUsed"
+    local value_mem_used=""
+    value_mem_used="$(free --mega | grep Mem: | awk '{print $3}')"
+
+    local label_mem_free="MemoryFree"
+    local value_mem_free=""
+    value_mem_free="$(free --mega | grep Mem: | awk '{print $4}')"
+    
+    local units="[Megabytes]"
+    
+    echo "Metrics:$PROG_NAME/$label_mem_used/$value_mem_used$units"
+    echo "Metrics:$PROG_NAME/$label_mem_free/$value_mem_free$units"
+}
+
+main()
+{
+    os_cpu_consumption
+    os_memory_consumption
+    
+    exit 0
+}
+
+main

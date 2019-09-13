@@ -36,7 +36,6 @@ public class Script
             stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
             stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
 
-               
             String line = null;
             if(exitValue == 0)
             {
