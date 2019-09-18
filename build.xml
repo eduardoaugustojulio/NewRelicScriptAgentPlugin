@@ -6,24 +6,38 @@
   <property name="version" value="0.0.1"/>
   <property name="jar.file" value="${dist.dir}/${dist.name}-${version}.jar"/>
   
-  <property name="src.dir" value="src/"/>
-  <property name="build.dir" value="build/"/>
-  <property name="lib.dir" value="lib/"/>
+  <property name="src.dir" value="src"/>
+  <property name="build.dir" value="build"/>
+  <property name="lib.dir" value="lib"/>
 
-  <property name="tests.src.dir" value="test/src/"/>
-  <property name="tests.lib.dir" value="test/lib/"/>
-  <property name="tests.build.dir" value="build/test/"/>
-
+  <property name="json-simple.jar" value="${lib.dir}/json-simple-1.1.1.jar"/>
+  <property name="logback-classic.jar" value="${lib.dir}/logback-classic-1.1.1.jar"/>
+  <property name="logback-core.jar" value="${lib.dir}/logback-core-1.1.1.jar"/>
+  <property name="slf4j-api.jar" value="${lib.dir}/slf4j-api-1.7.6.jar"/>
+   
   <path id="classpath">
-    <fileset dir="${lib.dir}">
-      <include name="**/*.jar"/>
-    </fileset>
+    <pathelement location="${json-simple.jar}"/>
+    <pathelement location="${logback-classic.jar}"/>
+    <pathelement location="${logback-core.jar}"/>
+    <pathelement location="${slf4j-api.jar}"/>
   </path>
 
+  <property name="tests.src.dir" value="test/src"/>
+  <property name="tests.lib.dir" value="test/lib"/>
+  <property name="tests.build.dir" value="build/test"/>
+
+  <property name="cglib-nodep.jar" value="${tests.lib.dir}/cglib-nodep-2.2.3.jar"/>
+  <property name="easymock.jar" value="${tests.lib.dir}/easymock-3.2.jar"/>
+  <property name="hamcrest.jar" value="${tests.lib.dir}/hamcrest-all-1.3.jar"/>
+  <property name="junit.jar" value="${tests.lib.dir}/junit-4.11.jar"/>
+  <property name="objenesis.jar" value="${tests.lib.dir}/objenesis-1.3.jar"/>
+
   <path id="classpath.test">
-    <fileset dir="${tests.lib.dir}">
-      <include name="**/*.jar"/>
-    </fileset>
+    <pathelement location="${cglib-node.jar}"/>
+    <pathelement location="${easymock.jar}"/>
+    <pathelement location="${hamcrest.jar}"/>
+    <pathelement location="${junit.jar}"/>
+    <pathelement location="${objenesis.jar}"/>
   </path>
     
   <target name="clean">
@@ -66,9 +80,9 @@
   <target name="test-compile" depends="compile">
     <javac srcdir="${tests.src.dir}:${src.dir}" destdir="${tests.build.dir}" debug="true" includeantruntime="false">
        <classpath>
-        <path refid="classpath"/>
-        <path refid="classpath.test"/>
-       </classpath>
+         <path refid="classpath"/>
+         <path refid="classpath.test"/>
+      </classpath>
     </javac>
     <echo>Done.</echo>
   </target>
@@ -76,6 +90,7 @@
   <target name="test" depends="test-compile">
     <junit printsummary="on" haltonfailure="yes" fork="true">
         <classpath>
+          <path refid="classpath"/>
           <path refid="classpath.test"/>
           <pathelement location="${tests.build.dir}"/>
         </classpath>
