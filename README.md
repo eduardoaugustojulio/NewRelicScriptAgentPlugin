@@ -1,5 +1,7 @@
 # New Relic Script Agent Plugin #
 
+[![Build Status](https://travis-ci.org/eduardoaugustojulio/NewRelicScriptAgentPlugin.svg?branch=master)](https://travis-ci.org/eduardoaugustojulio/NewRelicScriptAgentPlugin)
+
 ## Description ##
 This plugin is designed to execute custom scripts and read their output from stdout, parse the output into metrics
 and upload these metrics into your New Relic cloud account.
