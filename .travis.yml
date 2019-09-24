@@ -1,16 +1,3 @@
-matrix:
-  include:
-    - language: java
-      script:
-        - ant compile
-
-    - language: shell
-      before_install:
-        - cd scripts/ 
-      script:
-        - bash -c 'shopt -s globstar nullglob; shellcheck ./*.{sh,ksh,bash}' 
-
-notifications:
-  email: false
-
-
+language: java
+jdk: oraclejdk8
+script: "ant jar && ant test"
